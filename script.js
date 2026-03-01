@@ -1,5 +1,5 @@
 // Food Data Configuration
-const foodItems = [
+const defaultFoodItems = [
     {
         id: 1,
         name: "Classic Pepperoni",
@@ -284,6 +284,16 @@ const foodItems = [
         veg: false
     }
 ];
+
+let foodItems = JSON.parse(localStorage.getItem('foodItems'));
+if (!foodItems || foodItems.length === 0) {
+    foodItems = defaultFoodItems;
+    localStorage.setItem('foodItems', JSON.stringify(foodItems));
+}
+
+function saveFoodItems() {
+    localStorage.setItem('foodItems', JSON.stringify(foodItems));
+}
 
 // State
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -1056,6 +1066,8 @@ function handleReviewSubmit(e) {
     const currentTotalScore = item.rating * (item.reviews || 0);
     item.reviews = (item.reviews || 0) + 1;
     item.rating = (currentTotalScore + newRating) / item.reviews;
+
+    saveFoodItems();
 
     renderReviewsList(item);
 
